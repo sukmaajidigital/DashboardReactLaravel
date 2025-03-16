@@ -2,8 +2,10 @@ import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import EditCustomer from '@/components/customer/edit-customer';
 import DeleteCustomer from '@/components/customer/delete-customer';
+import FormCustomer from '@/components/form/form-customer';
+import Edit from '@/components/action/edit';
+import { Button } from '@/components/ui/button';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,9 +28,10 @@ type Customer = {
 
 type CustomerTableProps = {
     customers: Customer[];
+    customerkategoris: { id: number; nama_kategori: string }[];
 };
 
-export default function CustomerTable({ customers }: CustomerTableProps) {
+export default function CustomerTable({ customers, customerkategoris }: CustomerTableProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Customer" />
@@ -47,17 +50,31 @@ export default function CustomerTable({ customers }: CustomerTableProps) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {customers.map((customer) => (
-                                <TableRow key={customer.id}>
-                                    <TableCell>{customer.id}</TableCell>
-                                    <TableCell>{customer.nama_customer}</TableCell>
-                                    <TableCell>{customer.email || '-'}</TableCell>
-                                    <TableCell>{customer.telepon}</TableCell>
-                                    <TableCell>{customer.customerkategori?.nama_kategori || '-'}</TableCell>
-
+                            {customers.map((customerdata) => (
+                                <TableRow key={customerdata.id}>
+                                    <TableCell>{customerdata.id}</TableCell>
+                                    <TableCell>{customerdata.nama_customer}</TableCell>
+                                    <TableCell>{customerdata.email || '-'}</TableCell>
+                                    <TableCell>{customerdata.telepon}</TableCell>
+                                    <TableCell>{customerdata.customerkategori?.nama_kategori || '-'}</TableCell>
                                     <TableCell className="flex gap-2">
-                                        <EditCustomer customer={customer} customerkategoris={customerkategoris} />
-                                        <DeleteCustomer customerId={customer.id} />
+                                    <Edit
+                                        title="Edit Customer"
+                                        form={
+                                            <FormCustomer
+                                                customer={customerdata}
+                                                customerkategoris={customerkategoris}
+                                                onClose={() => setIsOpen(false)} // Teruskan setIsOpen sebagai prop
+                                                routeUpdate="customer.update"
+                                            />
+                                        }
+                                    >
+                                        {/* Hanya satu child element */}
+                                        <Button variant="outline" size="sm">
+                                            Edit
+                                        </Button>
+                                    </Edit>
+                                        <DeleteCustomer customerId={customerdata.id} />
                                     </TableCell>
                                 </TableRow>
                             ))}

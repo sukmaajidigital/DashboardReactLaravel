@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +20,19 @@ class DatabaseSeeder extends Seeder
             'name' => 'Root',
             'email' => 'test@example.com',
             'password' => Hash::make('123')
+        ]);
+        $kategoriIds = [];
+        $kategoriData = [
+            ['nama_kategori' => 'VIP'],
+            ['nama_kategori' => 'Reguler'],
+            ['nama_kategori' => 'Premium'],
+        ];
+
+        foreach ($kategoriData as $kategori) {
+            $kategoriIds[] = DB::table('customer_kategoris')->insertGetId($kategori);
+        }
+        $this->call([
+            CustomerSeeder::class,
         ]);
     }
 }

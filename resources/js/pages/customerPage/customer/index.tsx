@@ -1,11 +1,13 @@
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell,  TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import DeleteCustomer from '@/components/customer/delete-customer';
 import FormCustomer from '@/components/form/form-customer';
 import Edit from '@/components/action/edit';
 import { Button } from '@/components/ui/button';
+import Pagination from '@/components/ui/pagination';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,6 +34,17 @@ type CustomerTableProps = {
 };
 
 export default function CustomerTable({ customers, customerkategoris }: CustomerTableProps) {
+    const [currentPage, setCurrentPage] = useState(1); // State untuk halaman saat ini
+    const itemsPerPage = 10; // Jumlah item per halaman
+
+    // Hitung total halaman
+    const totalPages = Math.ceil(customers.length / itemsPerPage);
+
+    // Ambil data yang sesuai dengan halaman saat ini
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentCustomers = customers.slice(startIndex, endIndex);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Customer" />
@@ -50,7 +63,7 @@ export default function CustomerTable({ customers, customerkategoris }: Customer
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {customers.map((customerdata) => (
+                            {currentCustomers.map((customerdata) => (
                                 <TableRow key={customerdata.id}>
                                     <TableCell>{customerdata.id}</TableCell>
                                     <TableCell>{customerdata.nama_customer}</TableCell>
@@ -64,7 +77,7 @@ export default function CustomerTable({ customers, customerkategoris }: Customer
                                             <FormCustomer
                                                 customer={customerdata}
                                                 customerkategoris={customerkategoris}
-                                                onClose={() => setIsOpen(false)} // Teruskan setIsOpen sebagai prop
+                                                // onClose={() => setIsOpen(false)} // Teruskan setIsOpen sebagai prop
                                                 routeUpdate="customer.update"
                                             />
                                         }
@@ -80,6 +93,14 @@ export default function CustomerTable({ customers, customerkategoris }: Customer
                             ))}
                         </TableBody>
                     </Table>
+                </div>
+                {/* Pindahkan Pagination ke sini dan tambahkan styling */}
+                <div className="mt-4 flex justify-end">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                    />
                 </div>
             </div>
         </AppLayout>

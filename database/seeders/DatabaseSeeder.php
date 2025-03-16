@@ -22,15 +22,16 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123')
         ]);
         $kategoriIds = [];
-        $kategoriData = [
-            ['nama_kategori' => 'VIP'],
-            ['nama_kategori' => 'Reguler'],
-            ['nama_kategori' => 'Premium'],
-        ];
-
+        $kategoriData = [];
+        for ($i = 1; $i <= 100; $i++) {
+            $kategoriData[] = [
+                'nama_kategori' => 'Kategori ' . $i,
+            ];
+        }
         foreach ($kategoriData as $kategori) {
             $kategoriIds[] = DB::table('customer_kategoris')->insertGetId($kategori);
         }
+
         $this->call([
             CustomerSeeder::class,
         ]);

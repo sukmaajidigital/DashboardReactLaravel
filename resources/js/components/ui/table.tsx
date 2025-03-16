@@ -12,6 +12,11 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
     <thead className={cn("bg-muted text-muted-foreground", className)} {...props} />
   );
 }
+function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
+    return (
+      <thead className={cn("bg-muted text-muted-foreground", className)} {...props} />
+    );
+  }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
@@ -35,4 +40,4 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   );
 }
 
-export { Table, TableHeader, TableRow, TableHead, TableBody, TableCell };
+export { Table, TableHeader, TableFooter, TableRow, TableHead, TableBody, TableCell };
